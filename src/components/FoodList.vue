@@ -26,7 +26,7 @@
                   <button
                     type="button"
                     class="btn btn-danger mr-2"
-                    v-on:click="deleteFood(index)"
+                    v-on:click="deleteFood(index,food._id)"
                   >ลบ</button>
                   <button
                     type="button"
@@ -52,7 +52,11 @@
                   />
                 </td>
                 <td v-if="index === editIndex">
-                  <button type="button" class="btn btn-success mr-2" v-on:click="editFood()">ยืนยัน</button>
+                  <button
+                    type="button"
+                    class="btn btn-success mr-2"
+                    v-on:click="editFood(food._id)"
+                  >ยืนยัน</button>
                   <button
                     type="button"
                     class="btn btn-secondary"
@@ -77,9 +81,16 @@ export default {
       price: 0
     };
   },
+  created() {
+    this.fetchFood();
+  },
   methods: {
-    deleteFood(index) {
-      this.$store.dispatch("deleteFood", index);
+    fetchFood() {
+      this.$store.dispatch("fetchFood");
+    },
+    deleteFood(index, _id) {
+      let payload = { index: index, _id: _id };
+      this.$store.dispatch("deleteFood", payload);
     },
     openEdit(index, food) {
       this.editIndex = index;
@@ -91,9 +102,10 @@ export default {
       this.name = "";
       this.price = 0;
     },
-    editFood() {
+    editFood(_id) {
       let payload = {
         index: this.editIndex,
+        _id: _id,
         name: this.name,
         price: this.price
       };
